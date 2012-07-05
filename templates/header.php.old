@@ -1,0 +1,11 @@
+<HTML>
+  <HEAD>
+    <link rel="shortcut icon" type="image/x-icon"  href="<?=$GLOBALS['BASE_URI']?>images/icons/favicon.ico">
+
+<? if ($GLOBALS['USER']) : ?>
+     <meta http-equiv="REFRESH" CONTENT="<?=$GLOBALS['REFRESH'] * 60?>; URL='?dispatch=logout'">
+<? endif ?>
+     <TITLE>Stud.IP Plugin Marktplatz</TITLE>
+  </HEAD>
+<BODY>
+

@@ -1,0 +1,189 @@
+<script type="text/javascript">
+// <![CDATA[
+var saveComment = function (rid, cobj, captcha_code) {
+        new Ajax.Request('ajax_dispatcher.php?ajaxcmd=insert_comment', {
+                method: 'post',
+		parameters: { captcha_code: $(captcha_code).value, rid: rid, comment_value: $(cobj).value},
+                onSuccess: function(t) {
+			if (t.responseText != 'OK') {
+				alert(t.responseText);
+			} else {
+				alert('Der Kommentar wurde gespeichert.');
+				$(cobj).value = '';
+			}
+			$(captcha_code).value = '';
+			document.getElementById('captcha').src = '<?=$GLOBALS['BASE_URI']?>lib/captcha/securimage_show.php?' + Math.random();
+			getCommentsContent(rid);
+                },
+                onFailure: function(t) {alert('Error ' + t.status + ' -- ' + t.statusText); },
+                on404: function(t) {alert('Error 404: location "' + t.statusText + '" was not found.'); }
+        });
+}
+var getCommentsContent = function (rid) {
+        new Ajax.Request('ajax_dispatcher.php?ajaxcmd=get_comments&rid='+rid, {
+                method: 'post',
+                onSuccess: function(transport) {
+                        $('comments_container_'+rid).innerHTML = transport.responseText;
+                },
+                onFailure: function(t) {alert('Error ' + t.status + ' -- ' + t.statusText); },
+                on404: function(t) {alert('Error 404: location "' + t.statusText + '" was not found.'); }
+        });
+}
+var removeCommentsItem = function (item, rid) {
+        new Ajax.Request('ajax_dispatcher.php?ajaxcmd=remove_comment_item', {
+                method: 'post',
+                parameters: 'item='+item+'&rid='+rid,
+                onSuccess: function(transport) {
+                        getCommentsContent(rid);
+                },
+                onFailure: function(t) {alert('Error ' + t.status + ' -- ' + t.statusText); },
+                on404: function(t) {alert('Error 404: location "' + t.statusText + '" was not found.'); }
+        });
+}
+// ]]>
+</script>
+<LINK REL="stylesheet" HREF="<?=$css_uri?>/tagcloud.css" TYPE="text/css" />
+<CENTER>
+<TABLE BORDER=0 STYLE="width:900px; min-width:900px;" CELLSPACING=0 CELLPADDING=0>
+  <TR>
+    <TD COLSPAN="2" STYLE="background-color:#<?=($GLOBALS['PERM']->have_perm('admin') ? 'a40000' : '1b3870')?>; color:white; font-size:14px; height:30px; min-height:30px; max-height:30px;">
+      <DIV STYLE="float:left; padding-top:4px;">&nbsp;<A HREF="?dispatch=rss" TARGET="_blank"><IMG SRC="images/icons/feed_rss.png" ALT="RSS Feed" TITLE="RSS Feed"></A>&nbsp;<A HREF="?dispatch=atom" TARGET="_blank"><IMG SRC="images/icons/feed_atom.png" ALT="ATOM Feed" TITLE="ATOM Feed"></A></DIV>
+<? if ($user = $GLOBALS['AUTH']->getAuthenticatedUser()) : ?>
+      <DIV STYLE="float:right; padding-top:4px;">&nbsp;<SPAN STYLE="color:white; font-size:14px;">Angemeldet als: <?=UserManagement::getUsernameByUserId($user['user_id'])?></SPAN><SPAN STYLE="color:white; font-size:14px;">&nbsp;|&nbsp;</SPAN><A HREF="?dispatch=logout" STYLE="color:white; font-size:14px;">Logout</A>&nbsp;</DIV>
+<? else :?>
+      <DIV STYLE="float:right; padding-top:4px;"><A HREF="?dispatch=register" STYLE="color:white; font-size:14px;">Registrieren</A> | <A HREF="?dispatch=login" STYLE="color:white; font-size:14px;">Login</A>&nbsp;</DIV>
+<? endif ?>
+      <DIV STYLE="clear:both;"></DIV>
+    </TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2">
+     <A HREF="<?=$GLOBALS['BASE_URI']?>"><IMG SRC="images/marketplace_header.png" BORDER=0></A>
+    </TD>
+  </TR>
+  <TR>
+    <TD STYLE="vertical-align:top; width:200px; min-width:200px; max-width:200px; color:white; font-size:14px; font-weight:bold; padding-right:15px;">
+      <TABLE BORDER=0 STYLE="width:200px; min-width:200px; max-width:200px;" CELLSPACING=0 CELLPADDING=0>
+        <TR><TD STYLE="background-color:#1b3870; color:white; font-size:16px; height:30px; min-height:30px; max-height:30px;">&nbsp;Der Marktplatz</TD></TR>
+        <TR>
+          <TD STYLE="vertical-align:top;">
+           <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/information.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="?dispatch=welcome">Willkommen</A> <?=($GLOBALS['PERM']->have_perm('admin') ? "<A HREF=\"?dispatch=edit_content&key=welcome\"><IMG SRC=\"images/icons/pencil.png\" ALT=\"bearbeiten\" TITLE=\"bearbeiten\"></A>" : '')?></TD></TR></TABLE></DIV>
+           <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/information.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="?dispatch=marktplatz">&Uuml;ber den Marktplatz</A> <?=($GLOBALS['PERM']->have_perm('admin') ? "<A HREF=\"?dispatch=edit_content&key=marktplatz\"><IMG SRC=\"images/icons/pencil.png\" ALT=\"bearbeiten\" TITLE=\"bearbeiten\"></A>" : '')?></TD></TR></TABLE></DIV>
+           <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/help.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="?dispatch=faq">FAQ</A> <?=($GLOBALS['PERM']->have_perm('admin') ? "<A HREF=\"?dispatch=edit_content&key=faq\"><IMG SRC=\"images/icons/pencil.png\" ALT=\"bearbeiten\" TITLE=\"bearbeiten\"></A>" : '')?></TD></TR></TABLE></DIV>
+           <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/studip_portal.gif"><TD><TD CLASS="portal_menu_item_txt"><A HREF="http://www.studip.de" TARGET="studip">Stud.IP-Portal</A></TD></TR></TABLE></DIV>
+           <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/link.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="?dispatch=links">Weiterf&uuml;hrende Links</A> <?=($GLOBALS['PERM']->have_perm('admin') ? "<A HREF=\"?dispatch=edit_content&key=links\"><IMG SRC=\"images/icons/pencil.png\" ALT=\"bearbeiten\" TITLE=\"bearbeiten\"></A>" : '')?></TD></TR></TABLE></DIV>
+           <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/group.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="?dispatch=team">Das Team</A> <?=($GLOBALS['PERM']->have_perm('admin') ? "<A HREF=\"?dispatch=edit_content&key=team\"><IMG SRC=\"images/icons/pencil.png\" ALT=\"bearbeiten\" TITLE=\"bearbeiten\"></A>" : '')?></TD></TR></TABLE></DIV>
+          </TD>
+        </TR>
+      </TABLE><BR>
+      <TABLE BORDER=0 STYLE="width:200px; min-width:200px; max-width:200px;" CELLSPACING=0 CELLPADDING=0>
+        <TR><TD STYLE="background-color:#1b3870; color:white; font-size:16px; height:30px; min-height:30px; max-height:30px;">&nbsp;Kategorien</TD></TR>
+        <TR>
+         <TD STYLE="vertical-align:top;">
+<? foreach ($GLOBALS['DBM']->getCategories() as $c) : ?>
+          <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/folder.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="?dispatch=show_category&category_id=<?=$c['category_id']?>"><?=$c['name']?> <SPAN STYLE="font-size:11px;">(<?=$c['count_cat']?>)</SPAN></A></TD></TR></TABLE></DIV>
+<? endforeach ?>
+          </TD>
+        </TR>
+      </TABLE><BR>
+      <TABLE BORDER=0 STYLE="width:200px; min-width:200px; max-width:200px;" CELLSPACING=0 CELLPADDING=0>
+        <TR><TD STYLE="background-color:#1b3870; color:white; font-size:16px; height:30px; min-height:30px; max-height:30px;">&nbsp;Hitlisten</TD></TR>
+        <TR>
+          <TD STYLE="vertical-align:top;">
+<? foreach (array(/*array('title'=>'Empfohlene Plugins','uri'=>'?dispatch=hitlist&part=recommended'),*/array('title'=>'Neueste Releases','uri'=>'?dispatch=hitlist&part=latest'),array('title'=>'Meiste Downloads','uri'=>'?dispatch=hitlist&part=most_downloaded'),array('title'=>'Am meisten bewertet','uri'=>'?dispatch=hitlist&part=most_rated')) as $d) : ?>
+          <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/star.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="<?=$d['uri']?>"><?=$d['title']?></A></TD></TR></TABLE></DIV>
+<? endforeach ?>
+          </TD>
+        </TR>
+      </TABLE><BR>
+      <TABLE BORDER=0 STYLE="width:204px; min-width:200px; max-width:204px;" CELLSPACING=0 CELLPADDING=0>
+        <TR><TD STYLE="background-color:#1b3870; color:white; font-size:16px; height:30px; min-height:30px; max-height:30px;">&nbsp;Beliebte Tags</TD></TR>
+        <TR><TD STYLE="width:200px; min-width:200px; max-width:200px;"><?=$cloud?></TD></TR>
+      </TABLE><BR>
+<? if ($user = $GLOBALS['AUTH']->getAuthenticatedUser()) : ?>
+      <TABLE BORDER=0 STYLE="width:200px; min-width:200px; max-width:200px;" CELLSPACING=0 CELLPADDING=0>
+        <TR><TD STYLE="background-color:#1b3870; color:white; font-size:16px; height:30px; min-height:30px; max-height:30px;">&nbsp;Mein Marktplatz</TD></TR>
+        <TR>
+          <TD STYLE="vertical-align:top;">
+           <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/user.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="?dispatch=show_profile">Mein Profil</A></TD></TR></TABLE></DIV>
+<? if ($GLOBALS['PERM']->have_perm('author')) : ?>
+           <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/brick_add.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="?dispatch=assi">Plugin eintragen</A></TD></TR></TABLE></DIV>
+           <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/bricks.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="?dispatch=view_own_plugins">Meine Plugins</A></TD></TR></TABLE></DIV>
+<? endif ?>
+<? if ($GLOBALS['PERM']->have_perm('admin')) : ?>
+           <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/user_edit.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="?dispatch=user_management">Benutzerverwaltung</A></TD></TR></TABLE></DIV>
+           <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/lock.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="?dispatch=clearing">Plugins freischalten (<?=count($GLOBALS['DBM']->getUnclearPlugins())?>)</A></TD></TR></TABLE></DIV>
+<? endif ?>
+          </TD>
+        </TR>
+      </TABLE><BR>
+<? endif ?>
+      <TABLE BORDER=0 STYLE="width:200px; min-width:200px; max-width:200px;" CELLSPACING=0 CELLPADDING=0>
+        <TR><TD STYLE="background-color:#1b3870; color:white; font-size:16px; height:30px; min-height:30px; max-height:30px;">&nbsp;F&uuml;r Entwickler</TD></TR>
+        <TR>
+         <TD STYLE="vertical-align:top;">
+          <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/world_link.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="?dispatch=show_plugin_generator">Plugin-Generator</A></TD></TR></TABLE></DIV>
+          <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/world_link.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="http://hilfe.studip.de/index.php/Entwickler/HomePage" TARGET="_blank">Plugin-Schnittstelle</A></TD></TR></TABLE></DIV>
+          <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/world_link.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="?dispatch=tutorials">Tutorials</A> <?=($GLOBALS['PERM']->have_perm('admin') ? "<A HREF=\"?dispatch=edit_content&key=tutorials\"><IMG SRC=\"images/icons/pencil.png\" ALT=\"bearbeiten\" TITLE=\"bearbeiten\"></A>" : '')?></TD></TR></TABLE></DIV>
+          <DIV CLASS="portal_menu_item" onMouseOver="this.style.backgroundColor='#89b7ea';" onMouseOut="this.style.backgroundColor='#cbe4fb';"><TABLE BORDER=0 WIDTH="100%" CELLSPACING=0 CELLPADDING=0><TR><TD STYLE="vertical-align:top; width:20px; min-width:20px; max-width:20px;"><IMG SRC="images/icons/world_link.png"><TD><TD CLASS="portal_menu_item_txt"><A HREF="?dispatch=devfaq">Entwicklungs-FAQ</A> <?=($GLOBALS['PERM']->have_perm('admin') ? "<A HREF=\"?dispatch=edit_content&key=devfaq\"><IMG SRC=\"images/icons/pencil.png\" ALT=\"bearbeiten\" TITLE=\"bearbeiten\"></A>" : '')?></TD></TR></TABLE></DIV>
+          </TD>
+        </TR>
+      </TABLE><BR>
+    </TD>
+    <TD STYLE="vertical-align:top; width:700px; min-width:700px;">
+      <TABLE BORDER=0 STYLE="width:700px; min-width:700px; max-width:700px;" CELLSPACING=0 CELLPADDING=0>
+        <TR>
+          <TD STYLE="background-color:#1b3870; color:white; font-size:14px; height:30px; min-height:30px; max-height:30px;">
+           <DIV STYLE="float:left; height:30px; min-height:30px; max-height:30px; width:645px; min-width:645px; max-width:645px;">
+      <!-- FORM NAME="search" METHOD="POST" ACTION="?dispatch=search" STYLE="color:white; font-size:14px; height:30px; min-height:30px; max-height:30px; width:645px; min-width:645px; max-width:645px;" -->
+      &nbsp;Suchen nach&nbsp;<INPUT TYPE="text" MAXLENGTH="255" class="jq_watermark" placeholder="Suchwort" NAME="search_txt" ID="search_txt" STYLE="font-size:14px; width:180px; margin-top:3px;">&nbsp;in der Kategorie&nbsp;
+      <SELECT SIZE="1" NAME="category_id" ID="category_id" STYLE="width:180px;">
+        <OPTION VALUE="all">Alle Kategorien</OPTION>
+<? foreach ($GLOBALS['DBM']->getCategories() as $c) : ?>
+        <OPTION VALUE="<?=$c['category_id']?>"><?=$c['name']?></OPTION>
+<? endforeach ?>
+      </SELECT>&nbsp;<INPUT TYPE="image" SRC="images/icons/zoom.png" ALT="finden" TITLE="finden" onClick="location.href='?dispatch=search&category_id='+$('category_id').value+'&search_txt='+$('search_txt').value;">
+      <!-- /FORM -->
+<script type="text/javascript">
+$j('#search_txt').keypress(function(event) {
+  if (event.keyCode == '13') {	
+	location.href='?dispatch=search&category_id='+$j('#category_id').val()+'&search_txt='+$j('#search_txt').val();
+  }
+});
+</script>
+            </DIV>
+            <DIV STYLE="float:left; padding-left:5px;"><A HREF="?dispatch=show_extended_search"><IMG SRC="images/erweiterte_suche.png" ALT="Erweiterte Suche" TITLE="Erweiterte Suche"></A></DIV>
+            <DIV STYLE="clear:both;"></DIV>
+          </TD>
+        </TR>
+        <TR>
+          <TD>
+      <DIV ID="msg" STYLE="font-size:12px; font-weight:bold;">
+<?=History::show();?>
+<? if ($_SESSION['msg']) : ?>
+<?=MessageBox::$_SESSION['msg_type']($_SESSION['msg'])?>
+<? setMessage('info',''); ?>
+<? endif ?>
+      </DIV>
+      <DIV ID="main_content" STYLE="margin-top:10px;">
+      <?=$main_content?>
+      </DIV>
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" STYLE="text-align:right;">
+      <IMG SRC="images/mitglieder_ev.png" BORDER=0>
+    </TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="2" STYLE="text-align:center; background-color:#<?=($GLOBALS['PERM']->have_perm('admin') ? 'a40000' : '1b3870')?>; color:white; font-size:14px; height:30px; min-height:30px; max-height:30px;">
+     <A HREF="?dispatch=impressum" STYLE="color:white; font-size:14px;">Impressum</A> <?=($GLOBALS['PERM']->have_perm('admin') ? "<A HREF=\"?dispatch=edit_content&key=impressum\"><IMG SRC=\"images/icons/pencil.png\" ALT=\"bearbeiten\" TITLE=\"bearbeiten\"></A>" : '')?> | 
+     <A HREF="?dispatch=datenschutz" STYLE="color:white; font-size:14px;">Datenschutz</A> <?=($GLOBALS['PERM']->have_perm('admin') ? "<A HREF=\"?dispatch=edit_content&key=datenschutz\"><IMG SRC=\"images/icons/pencil.png\" ALT=\"bearbeiten\" TITLE=\"bearbeiten\"></A>" : '')?> | 
+     <A HREF="?dispatch=nutzungsbedingungen" STYLE="color:white; font-size:14px;">Nutzungsbedingungen</A> <?=($GLOBALS['PERM']->have_perm('admin') ? "<A HREF=\"?dispatch=edit_content&key=nutzungsbedingungen\"><IMG SRC=\"images/icons/pencil.png\" ALT=\"bearbeiten\" TITLE=\"bearbeiten\"></A>" : '')?>
+    </TD>
+  </TR>
+</TABLE>
+</CENTER>

@@ -1,0 +1,23 @@
+div.tagsautocomplete {
+  position:absolute;
+  width:250px;
+  background-color:#c8ebff;
+  border:1px solid #888;
+  margin:0px;
+  padding:0px;
+}
+div.tagsautocomplete ul {
+  list-style-type:none;
+  margin:0px;
+  padding:0px;
+}
+div.tagsautocomplete ul li.selected { background-color: #a5daf8;}
+div.tagsautocomplete ul li {
+  list-style-type:none;
+  display:block;
+  margin:0;
+  padding:2px;
+  height:20px;
+  cursor:pointer;
+  font-size:12px;
+}

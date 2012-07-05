@@ -1,0 +1,31 @@
+#cloud {
+        padding: 5px;
+        line-height: 1.5em;
+        text-align: justify;
+        #margin-top: 5px;
+        #margin-bottom: 5px;
+	overflow:hidden;
+        display:inline-block;
+        width:170px;
+        min-width:170px;
+        max-width:170px;
+        /*background-color: #FBFBF5;*/
+        /*background-image:url(../images/tagcloud.png);*/
+}
+#cloud a {
+        padding: 0px;
+        font-family: helvetica, arial, sans-serif;
+}
+#cloud li { display: inline; }
+
+#cloud a.tag1 { font-size: 0.8em; font-weight: 100; }
+#cloud a.tag2 { font-size: 0.9em; font-weight: 200; }
+#cloud a.tag3 { font-size: 1.0em; font-weight: 300; }
+#cloud a.tag4 { font-size: 1.1em; font-weight: 400; }
+#cloud a.tag5 { font-size: 1.3em; font-weight: 500; }
+#cloud a.tag6 { font-size: 1.5em; font-weight: 600; }
+#cloud a.tag7 { font-size: 1.7em; font-weight: 700; }
+#cloud a.tag8 { font-size: 1.9em; font-weight: 800; }
+#cloud a.tag9 { font-size: 2.1em; font-weight: 900; }
+#cloud a.tag10 { font-size: 2.3em; font-weight: 900; }
+

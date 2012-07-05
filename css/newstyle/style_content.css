@@ -1,0 +1,86 @@
+strong {
+	font-weight: bold;
+}
+em {
+	font-style: italic;
+}
+
+.align-center {
+	text-align: center;
+}
+
+.align-left {
+	text-align: left;
+}
+
+.align-justify {
+	text-align: justify;
+}
+
+.align-right {
+	text-align: right;
+}
+
+.mblock1-bottom h1, h2, h3, h4 {
+	line-height: normal;
+	color: #1E549E;
+	font-weight: bold;
+}
+
+.mblock1-bottom h1 {
+	font-size: 24px;
+}
+
+.mblock1-bottom h2 {
+	margin: 25px 0px 15px 0px;
+	font-size: 20px;
+}
+
+.mblock1-bottom h3 {
+	font-size: 15px;
+	margin: 20px 0px 12px 0px;
+}
+
+.mblock1-bottom h4 {
+	/*font-size: 12px;*/
+	margin: 15px 0px 10px 0px;
+}
+
+sup {
+	font-size: 0.9em;
+	vertical-align: top;
+}
+
+sub {
+	font-size: 0.9em;
+	vertical-align: bottom;
+}
+
+.mblock1-bottom p {
+	margin: 10px 0px 10px 0px;
+}
+
+.mblock1-bottom ul {
+	margin-left: 2.5em;
+}
+
+.mblock1-bottom li ul {
+	margin-left: 2em;
+}
+
+.mblock1-bottom ul li {
+}
+	
+.mblock1-bottom ul li ul {
+}
+	
+.mblock1-bottom ul li ul li {
+}
+	
+.mblock1-bottom ol {
+	margin-left: 2.5em;
+}
+
+.mblock1-bottom li ol {
+	margin-left: 2em;
+}
